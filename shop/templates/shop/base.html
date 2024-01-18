@@ -1,0 +1,101 @@
+{% extends "bulma/base.html" %}
+{% load static bulma_tags shop_tags %}
+{% block css %}
+    {% font_awesome %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    {% block extra_css %}
+    <style>
+        .indented {
+            text-indent: 30px;
+        }
+    </style>
+    {% endblock %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+
+{% block hero %}
+<section class="hero is-primary is-small">
+    <div class="hero-head">
+        
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="{% url 'shop:product_list' %}">
+                        <img src="{% static 'img/logo.png' %}" alt="logo" width="112" height="28">
+                    </a>
+                    <div class="navbar-burger" data-target="navbarMenu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="navbar-menu" id="navbarMenu">
+                    <div class="navbar-end">
+                        <a class="navbar-item" href="{% url 'shop:product_list' %}">Shop</a>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">Categories</a>
+                            {% get_categories as categories %}
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item has-text-weight-semibold" href="{% url 'shop:product_list' %}">Shop All</a>
+                                <hr class="navbar-divider">
+                                {% for c in categories %}
+                                <a class="navbar-item" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+    </div>
+    <div class="hero-body">
+        <div class="container">
+            <div class="content has-text-right">
+                <p class="is-italic">Your cart is empty.</p>
+            </div>
+        </div>
+    </div>
+    <div class="hero-foot">
+        <div class="container">
+            <div class="content has-text-left">
+                {% block hero_title %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block content_area %}
+<div class="columns">
+    {% block content %}
+    {% endblock %}
+</div>
+{% endblock content_area %}
+{% block modal %}{% endblock %}
+{% block footer %}
+<footer class="footer">
+    <div class="container">
+        <div class="content has-text-centered">
+            <p>
+                <strong>HexMarkets</strong> built by <a href="https://github.com/HexChamber">HexChamber Dev</a>.
+            </p>
+            <p>
+                Source code is licensed by <a href="https://opensource.org/licenses/mit-license.php">MIT License</a>.
+            </p>
+            <p>
+                &copy; 2024
+            </p>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+{% block javascript %}
+<script src="//cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+<script>
+    const csrftoken = Cookies.get('csrftoken');
+</script>
+{% block extra_javascript %}{% endblock %}
+{% endblock %}
+

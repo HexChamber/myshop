@@ -1,0 +1,94 @@
+{% extends "shop/base.html" %}
+{% load bulma_tags static shop_tags %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block hero_title %}
+<a href="{{ product.category.get_absolute_url }}"><h1 class="title">{{ product.category }}</h1></a>
+{% endblock %}
+{% block content %}
+<div class="column is-half">
+    <div class="box">
+        <figure id="productImage" class="image is-square">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+        </figure>
+    </div>
+</div>
+<div class="column is-4">
+    <div class="block">
+        <h3 class="title is-2">{{ product.name }}</h3>
+        <p class="subtitle"><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></p>
+    </div>
+    <hr>
+    <div class="block">
+        <div class="content">
+            <p class="indented">
+                {{ product.description }}
+            </p>
+        </div>
+    </div>
+    <div class="level is-centered">
+        <div class="level-left">
+            <button class="button is-static has-background-dark has-text-weight-semibold">${{ product.price }}</button>
+        </div>
+        <div class="level-right">
+            <button class="button is-primary is-outlined cart-modal-trigger" data-target="modalCartAdd">Add to cart</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<div id="modalCartAdd" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <h3 class="title is-4">Add {{ product.name }} to cart</h3>
+            <p class="subtitle">Please select the quantity you wish to purchase:</p>
+            <div class="block">
+                <p>Under construction</p>
+            </div>
+        </div>
+    </div>
+    <button class="modal-close is-large"></button>
+</div>
+{% endblock %}
+{% block extra_javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        function openModal($el) {
+            $el.classList.add('is-active');
+        }
+
+        function closeModal($el) {
+            $el.classList.remove('is-active');
+        }
+
+        function closeAllModals() {
+            (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+                closeModal($modal);
+            });
+        }
+
+        (document.querySelectorAll('.cart-modal-trigger') || []).forEach(($trigger) => {
+            const modal = $trigger.dataset.target;
+            const $target = document.getElementById(modal);
+
+            $trigger.addEventListener('click', () => {
+                openModal($target);
+            });
+        });
+
+        (document.querySelectorAll('.modal-background, .modal-close') || []).forEach(($close) => {
+            const $target = $close.closest('.modal');
+            $close.addEventListener('click', () => {
+                closeModal($target);
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Escape') {
+                closeAllModals();
+            }
+        });
+    });
+</script>
+{% endblock %} 
