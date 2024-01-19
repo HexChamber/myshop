@@ -44,7 +44,15 @@
             <h3 class="title is-4">Add {{ product.name }} to cart</h3>
             <p class="subtitle">Please select the quantity you wish to purchase:</p>
             <div class="block">
-                <p>Under construction</p>
+                <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                    {{ cart_product_form|bulma }}
+                    {% csrf_token %}
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary is-outlined is-fullwidth">Add to cart</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

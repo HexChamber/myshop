@@ -52,8 +52,24 @@
     </div>
     <div class="hero-body">
         <div class="container">
-            <div class="content has-text-right">
-                <p class="is-italic">Your cart is empty.</p>
+            <div class="content block">
+                {% with total_items=cart|length %}
+                    {% if total_items > 0 %}
+                    <p class="has-text-weight-bold">Your cart:</p>
+                    <div class="tags has-addons are-medium">
+                        <span class="tag is-dark">
+                            {{ total_items }} item{{ total_items|pluralize }}
+                        </span>
+                        <span class="tag is-primary has-text-weight-semibold">
+                            ${{ cart.get_total_price }}
+                        </span>
+                    </div>
+                    {% else %}
+                    <span class="tag is-dark is-italic">
+                        Your cart is empty.
+                    </span>
+                    {% endif %}
+                {% endwith %}
             </div>
         </div>
     </div>

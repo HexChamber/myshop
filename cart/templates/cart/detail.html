@@ -1,0 +1,75 @@
+{% extends "shop/base.html" %}
+{% load static bulma_tags shop_tags %}
+{% block title %}Your shopping cart{% endblock %}
+{% block hero_title %}
+<h1 class="title">Your cart</h1>
+{% endblock hero_title %}
+{% block content %}
+<div class="column is-four-fifths">
+    <table class="table is-striped is-hoverable">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Remove</th>
+                <th>Unit price</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+                {% with product=item.product %}
+                <tr>
+                    <td>
+                        <a href="{{ product.get_absolute_url }}">
+                            <figure class="image is-128x128">
+                                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                            </figure>
+                        </a>
+                    </td>
+                    <td>{{ product.name }}</td>
+                    <td>
+                        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    {{ item.update_quantity_form.quantity|bulma_inline }}
+                                </div>
+                                <div class="control">
+                                    <button class="button is-dark is-normal" type="submit">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-cart-plus"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            {% csrf_token %}
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="control">
+                                <button type="submit" class="delete is-danger"></button>
+                            </div>
+                        </form>
+                    </td>
+                    <td><span class="tag is-warning is-light">${{ item.price }}</span></td>
+                    <td><span class="tag is-success is-light">${{ item.total_price }}</span></td>
+                </tr>
+                {% endwith %}
+            {% endfor %}
+            <tr class="is-selected">
+                <td><strong>Total</strong></td>
+                <td colspan="4"></td>
+                <td><span class="tag is-medium is-success">${{ cart.get_total_price }}</span></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <div class="buttons is-pulled-right is-centered">
+        <a href="{% url 'shop:product_list' %}" class="button is-outlined is-link">Continue shopping</a>
+        <a href="#" class="button is-outlined is-warning">Checkout</a>
+    </div>
+</div>
+{% endblock %}
